@@ -9,7 +9,7 @@ pipeline {
         IMAGE_NAME      = "node${env.BRANCH_NAME}"
         IMAGE_TAG       = 'v1.0'
         CONTAINER_NAME  = "cicd-pipeline_${env.IMAGE_NAME}"
-        PORT            = "${env.BRANCH_NAME == 'dev' ? 3000 : 3001}"
+        PORT            = "${env.BRANCH_NAME == 'dev' ? 3001 : 3000}"
     }
 
     stages {
