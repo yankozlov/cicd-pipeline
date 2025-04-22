@@ -25,6 +25,11 @@ pipeline {
                 sh 'bash scripts/test.sh'
             }
         }
+        stage('Lint') {
+            steps {
+                sh 'docker run --rm -i hadolint/hadolint < Dockerfile'
+            }
+        }
         stage('Login to DockerHub') {
             steps {
                 script {
