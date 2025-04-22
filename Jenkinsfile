@@ -11,6 +11,7 @@ pipeline {
         IMAGE_TAG       = 'v1.0'
         CONTAINER_NAME  = "cicd-pipeline_${env.IMAGE_NAME}"
         PORT            = "${env.BRANCH_NAME == 'dev' ? 3001 : 3000}"
+        TRIVY_REPORT            = "trivy-report.json"
     }
 
     stages {
@@ -37,6 +38,22 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh 'docker build -t ${IMAGE_FULL_NAME}:${IMAGE_TAG} .'
+            }
+        }
+        stage('Scan Docker Image for Vulnerabilities') {
+            steps {
+                script {
+                    sh """
+                        docker run --rm \
+                        aquasec/trivy:latest image \
+                        --exit-code 0 \
+                        --severity HIGH,MEDIUM,LOW \
+                        --format json \
+                        --no-progress ${IMAGE_FULL_NAME}:${IMAGE_TAG} \
+                        | tee -a $TRIVY_REPORT
+                    """
+                }
+                archiveArtifacts artifacts: "${TRIVY_REPORT}", fingerprint: true
             }
         }
         stage('Push Docker Image') {
