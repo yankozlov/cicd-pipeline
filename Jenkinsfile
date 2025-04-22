@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_NAME      = "node${env.BRANCH_NAME}"
         IMAGE_TAG       = 'v1.0'
-        CONAINER_NAME   = "cicd-pipeline_${env.IMAGE_NAME}"
+        CONTAINER_NAME  = "cicd-pipeline_${env.IMAGE_NAME}"
         PORT            = "${env.BRANCH_NAME == 'dev' ? 3000 : 3001}"
     }
 
