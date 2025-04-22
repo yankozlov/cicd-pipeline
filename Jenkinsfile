@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}'
+                sh '(docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}) || exit 0'
                 sh 'docker run -d --name ${CONTAINER_NAME} --expose 3000 -p ${PORT}:3000 ${IMAGE_NAME}:${IMAGE_TAG}'
             }
         }
