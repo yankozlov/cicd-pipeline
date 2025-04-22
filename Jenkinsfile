@@ -6,9 +6,10 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME  = "node${env.BRANCH_NAME}"
-        IMAGE_TAG   = 'v1.0'
-        PORT        = "${env.BRANCH_NAME == 'dev' ? 3000 : 3001}"
+        IMAGE_NAME      = "node${env.BRANCH_NAME}"
+        IMAGE_TAG       = 'v1.0'
+        CONAINER_NAME   = "cicd-pipeline_${env.IMAGE_NAME}"
+        PORT            = "${env.BRANCH_NAME == 'dev' ? 3000 : 3001}"
     }
 
     stages {
@@ -29,7 +30,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d --expose 3000 -p ${PORT}:3000 ${IMAGE_NAME}:${IMAGE_TAG}'
+                sh 'docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}'
+                sh 'docker run -d --name ${CONTAINER_NAME} --expose 3000 -p ${PORT}:3000 ${IMAGE_NAME}:${IMAGE_TAG}'
             }
         }
     }
